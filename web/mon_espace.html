@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>SPAT - Mon Espace Personnel</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: url('/background-epi.png') no-repeat center center fixed; background-size: cover; color: #333; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .container { width: 100%; max-width: 800px; background: rgba(255, 255, 255, 0.96); padding: 40px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); backdrop-filter: blur(5px); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #003366; padding-bottom: 20px; margin-bottom: 30px; }
+        .title-app { margin: 0; font-size: 22px; font-weight: 800; color: #003366; text-transform: uppercase; }
+        .btn-logout { background: #dc3545; color: white; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px; text-transform: uppercase; }
+        .profile-box { background: #f8f9fa; padding: 20px; border-radius: 6px; border: 1px solid #e5e5e5; margin-bottom: 30px; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 6px; overflow: hidden; }
+        th { background-color: #003366; color: white; padding: 12px; font-size: 12px; font-weight: 700; text-transform: uppercase; text-align: left; }
+        td { padding: 12px; font-size: 14px; border-bottom: 1px solid #e5e5e5; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-top">
+            <h2 class="title-app">👤 Espace Personnel Bénéficiaire</h2>
+            <a href="/logout" class="btn-logout">🔑 Déconnexion</a>
+        </div>
+
+        <div class="profile-box">
+            <p style="margin: 5px 0;"><b>Matricule :</b> <!-- MATRICULE_AGENT --></p>
+            <p style="margin: 5px 0;"><b>Fonction active :</b> <span style="color:#003366; font-weight:bold;"><!-- FONCTION_AGENT --></span></p>
+        </div>
+
+        <h3>📋 Mon Historique Personnel des Dotations</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Matériel Reçu</th>
+                    <th style="width: 100px; text-align: center;">Quantité</th>
+                    <th>Date d'Émargement</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- LIGNES_DOTATIONS_PERSONNELLES -->
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

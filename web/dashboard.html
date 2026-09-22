@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPAT - Gestion des EPI</title>
+    <style>
+        .print-report-title {
+            display: none;
+        }
+
+        @media print {
+            @page {
+                margin: 15mm;
+            }
+
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+            }
+
+            nav,
+            #section-creer-epi,
+            #section-mouvement-stock,
+            #section-gestion-utilisateurs,
+            .print-hide,
+            .btn-print,
+            a[href="/logout"] {
+                display: none !important;
+            }
+
+            .print-report-title {
+                display: block;
+                color: #003366;
+                font-size: 20px;
+                text-align: center;
+                margin: 0 0 20px;
+                letter-spacing: 1px;
+            }
+
+            #inventory-report {
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border: 0 !important;
+                box-shadow: none !important;
+            }
+
+            #inventory-report > h3 {
+                display: none;
+            }
+
+            #inventory-report table {
+                width: 100% !important;
+                background: #ffffff !important;
+            }
+        }
+    </style>
+</head>
+<body style="font-family: 'Segoe UI', Arial, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; color: #212529;">
+
+    <!-- BARRE DE NAVIGATION SUPÉRIEURE ÉPURÉE -->
+    <nav style="background: #ffffff; border-bottom: 1px solid #e5e5e5; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000;">
+        <div style="display: flex; align-items: center; gap: 30px;">
+            <div style="font-weight: 900; font-size: 22px; letter-spacing: 2px; color: #003366; text-transform: uppercase;">SPAT</div>
+            <div style="display: flex; gap: 20px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #555;">
+                <span style="color: #003366; border-bottom: 2px solid #003366; padding-bottom: 5px; cursor: pointer;">Stock & Mouvements</span>
+            </div>
+        </div>
+
+        <!-- MENU PROFIL AVEC AVATAR MODERNE -->
+        <div style="position: relative; display: flex; align-items: center; gap: 15px;">
+            <div style="text-align: right; font-family: sans-serif;">
+                <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #888; font-weight: 700; margin-bottom: 2px;">Rôle Actif</div>
+                <div style="font-size: 13px; font-weight: 700; color: #003366;" id="role-text-display">Profil non identifie</div>
+            </div>
+                    <!-- AVATAR DÉGRADÉ ULTRA-MODERNE ET INTERACTIF -->
+                <!-- AVATAR DÉGRADÉ ULTRA-MODERNE ET INTERACTIF -->
+        <div id="avatarMenuBtn" style="width: 45px; height: 45px; background: linear-gradient(135deg, #003366, #6f42c1); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.15); user-select: none; transition: transform 0.2s; outline: none;">
+            <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: white;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        </div>
+        
+        <!-- MENU DÉROULANT DU PROFIL -->
+        <div id="profileDropdown" style="display: none; position: absolute; right: 40px; top: 65px; background: white; border-radius: 8px; border: 1px solid #e5e5e5; box-shadow: 0 10px 30px rgba(0,0,0,0.12); width: 180px; z-index: 2000; overflow: hidden; text-align: left;">
+            <a href="#" style="display: block; padding: 12px 18px; color: #333; text-decoration: none; font-size: 13px; font-weight: 600; border-bottom: 1px solid #eee; background: #fafafa;">ℹ️ Mon Profil</a>
+            <a href="/logout" style="display: block; padding: 12px 18px; color: #dc3545; text-decoration: none; font-size: 13px; font-weight: 700; transition: background 0.2s;">🚪 Déconnexion</a>
+        </div>
+
+        
+        
+
+        </div>
+    </nav>
+
+    <!-- EN-TÊTE TITRE -->
+    <div style="background: linear-gradient(to bottom, #ffffff, #f8f9fa); padding: 50px 40px; text-align: center; border-bottom: 1px solid #e5e5e5;">
+        <h1 style="font-size: 32px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: #003366; margin: 0 0 10px 0;">Tableau de Bord Logistique</h1>
+        <p style="font-size: 14px; color: #666; max-width: 600px; margin: 0 auto; line-height: 1.6; font-weight: 500;">Pilotage en temps réel du parc d'équipements de protection individuelle et traçabilité des flux pour le personnel du Port de Toamasina.</p>
+    </div>
+
+    <!-- CONTENEUR PRINCIPAL EN GRILLE AÉRÉE -->
+    <div style="max-width: 1300px; margin: 40px auto; padding: 0 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 40px;">
+        
+        <!-- BLOC 1 : FORMULAIRES D'ACTION (Côte à côte) -->
+        <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+            
+            <!-- Formulaire 1 : Référentiel EPI (Masquable) -->
+            <div id="section-creer-epi" style="flex: 1; min-width: 350px; background: white; padding: 35px; border-radius: 8px; border: 1px solid #e5e5e5; box-shadow: 0 2px 12px rgba(0,0,0,0.02); text-align: left;">
+                <h3 style="margin-top: 0; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #003366; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 10px;">1. Nouvel Équipement</h3>
+                <form action="/ajouter-epi" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Désignation / Nom de l'EPI</label>
+                        <input type="text" name="nom_type" required placeholder="Ex: Casque de protection" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Taille / Pointure spécifique</label>
+                        <input type="text" name="taille_pointure" required placeholder="Ex: XL, L, 42, Unique" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                    </div>
+                    <button type="submit" style="padding: 12px; background-color: #003366; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; margin-top: 5px;">Créer la Structure d'EPI ↩</button>
+                </form>
+            </div>
+
+            <!-- Formulaire 2 : Mouvement de Stock -->
+            <div id="section-mouvement-stock" style="flex: 1; min-width: 350px; background: white; padding: 35px; border-radius: 8px; border: 1px solid #e5e5e5; box-shadow: 0 2px 12px rgba(0,0,0,0.02); text-align: left;">
+                <h3 style="margin-top: 0; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #003366; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 10px;">2. Enregistrer Mouvement</h3>
+                <form action="/mouvement-stock" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Sélectionner l'Équipement</label>
+                        <select name="id_type" id="select-epi-mouvement" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background: white; height: 38px;">
+                            <!-- Rempli dynamiquement par Java -->
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 15px;">
+                        <div style="flex: 1;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Quantité flux</label>
+                            <input type="number" name="quantite" min="1" required placeholder="Ex: 50" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                        </div>
+                        <div style="flex: 1;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Nature du Flux</label>
+                            <select name="type_mouvement" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background: white; height: 38px;">
+                                <option value="Entree">Entrée (Approvisionnement)</option>
+                                <option value="Sortie">Sortie (Dotation / Retrait)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" style="padding: 12px; background-color: #218838; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; margin-top: 5px;">Enregistrer le mouvement ↩</button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- BLOC 2 : AFFICHAGE DU GRAND TABLEAU DES STOCKS -->
+        <div id="inventory-report" style="background: white; padding: 35px; border-radius: 8px; border: 1px solid #e5e5e5; box-shadow: 0 2px 12px rgba(0,0,0,0.02); text-align: left;">
+            <h2 class="print-report-title">SPAT - RAPPORT D'INVENTAIRE GLOBAL</h2>
+            <button onclick="window.print()" class="btn-print" style="background: #003366; color: white; border: 0; border-radius: 4px; padding: 11px 18px; font-weight: 700; cursor: pointer; margin-bottom: 20px;">🖨️ Imprimer le Rapport d'Inventaire (PDF)</button>
+            <h3 style="margin-top: 0; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #003366; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 10px;">État des Stocks & Disponibilités</h3>
+            
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 14px; text-align: left;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #e5e5e5; color: #003366; font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
+                            <th style="padding: 15px 10px;">Équipement</th>
+                            <th style="padding: 15px 10px;">Taille / Pointure</th>
+                            <th style="padding: 15px 10px; text-align: center;">Stock Initial</th>
+                            <th style="padding: 15px 10px; text-align: center;">Total Entrées</th>
+                            <th style="padding: 15px 10px; text-align: center;">Total Sorties</th>
+                            <th style="padding: 15px 10px; text-align: center; font-weight: 900; color: #003366;">Total Disponible</th>
+                            <th id="th-action" style="padding: 15px 10px; text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-stock-body">
+                        <!-- Rempli dynamiquement par le serveur Java -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+              
+
+        <!-- ZONE DE CONTRÔLE BAS DE PAGE (Lien officiel de la Semaine 3) -->
+                 <!-- FORMULAIRE SECRET CRÉATION D'ACCÈS ACTEURS (HSTE / CHEF DE SERVICE) -->
+        <div id="section-gestion-utilisateurs" style="background: white; padding: 30px; border-radius: 8px; border: 1px solid #e5e5e5; box-shadow: 0 4px 15px rgba(0,0,0,0.02); margin-top: 20px; margin-bottom: 20px; text-align: left;">
+            <h3 style="margin-top: 0; font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #003366; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">👤 Administration : Enregistrer un accès Acteur</h3>
+            
+            <form action="/creer-utilisateur" method="POST" style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
+                <div style="flex: 1; min-width: 150px; display: flex; flex-direction: column;">
+                    <label style="font-size: 11px; font-weight: 700; color: #555; text-transform: uppercase; margin-bottom: 8px;">N° Matricule Acteur</label>
+                    <input type="text" name="nouveau_matricule" required placeholder="Ex: 2026_002" style="padding: 10px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; height: 40px; font-weight: 600;">
+                </div>
+                <div style="flex: 1; min-width: 150px; display: flex; flex-direction: column;">
+                    <label style="font-size: 11px; font-weight: 700; color: #555; text-transform: uppercase; margin-bottom: 8px;">Mot de passe</label>
+                    <input type="password" name="nouveau_password" required placeholder="••••••••" style="padding: 10px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; height: 40px;">
+                </div>
+                <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column;">
+                    <label style="font-size: 11px; font-weight: 700; color: #555; text-transform: uppercase; margin-bottom: 8px;">Attribuer le Rôle Acteur</label>
+                    <select name="nouveau_role" required style="padding: 10px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; height: 40px; background: white; font-weight: 600; color: #333;">
+                        <option value="Responsable HSTE">Responsable Département HSTE</option>
+                        <option value="Chef de service">Chef de Département / Responsable de service</option>
+                    </select>
+                </div>
+                <button type="submit" style="padding: 0 25px; background-color: #003366; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; height: 40px; font-size: 12px; text-transform: uppercase; transition: background 0.2s;">Créer l'accès Acteur ↩</button>
+            </form>
+        </div>
+
+        
+
+
+        </div>
+
+    </div> <!-- Fermeture du conteneur principal -->
+
+    <script>
+        // Gestion de l'avatar et de la déconnexion
+        const avatarBtn = document.getElementById('avatarMenuBtn');
+        const dropdown = document.getElementById('profileDropdown');
+
+        if (avatarBtn && dropdown) {
+            avatarBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dropdown.style.display = dropdown.style.display === 'none' || dropdown.style.display === '' ? 'block' : 'none';
+            });
+            document.addEventListener('click', function() {
+                dropdown.style.display = 'none';
+            });
+        }
+
+        // Gestion de la suppression AJAX sans recharger la page
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.textContent === 'Supprimer') {
+                e.preventDefault();
+                const url = e.target.getAttribute('href');
+                const ligneTableau = e.target.closest('tr');
+                
+                fetch(url, { method: 'GET' })
+                .then(response => {
+                    if (response.ok) {
+                        ligneTableau.style.transition = 'all 0.3s ease';
+                        ligneTableau.style.opacity = '0';
+                        setTimeout(() => ligneTableau.remove(), 300);
+                    } else {
+                        alert("Erreur lors de la suppression en base de données.");
+                    }
+                })
+                .catch(err => console.error("Erreur AJAX:", err));
+            }
+        });
+    </script>
+</body>
+</html>
+
+});
+
+    </script>
+                   <!-- SECTION EXCLUSIVE : VALIDATION DES BESOINS DE L'ÉQUIPE (SEULEMENT CHEF DE SERVICE) -->
+        <div id="section-validation-chef" style="display: none;">
+            <h3 style="margin-top: 0; font-size: 15px; font-weight: 800; text-transform: uppercase; color: #003366; margin-bottom: 20px; border-bottom: 2px solid #003366; padding-bottom: 10px;">📋 3. Consulter & Valider les Besoins en EPI de l'Équipe</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background-color: #f1f5f9;">
+                        <th style="padding: 10px; font-size: 11px; text-transform: uppercase; color: #333;">Matricule</th>
+                        <th style="padding: 10px; font-size: 11px; text-transform: uppercase; color: #333;">Agent</th>
+                        <th style="padding: 10px; font-size: 11px; text-transform: uppercase; color: #333;">Service</th>
+                        <th style="padding: 10px; font-size: 11px; text-transform: uppercase; color: #333;">Équipement Demandé</th>
+                        <th style="padding: 10px; font-size: 11px; text-transform: uppercase; color: #333; text-align: center;">Quantité</th>
+                        <th style="padding: 10px; font-size: 11px; text-transform: uppercase; color: #333; text-align: center;">Statut</th>
+                        <th style="padding: 10px; font-size: 11px; text-transform: uppercase; color: #333; text-align: center;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- LIGNES_DEMANDES_CHEF -->
+                </tbody>
+            </table>
+        </div>
+        <div class="print-hide" style="display: flex; justify-content: space-between; align-items: center; padding: 25px; background: #ffffff; border-radius: 8px; border: 1px solid #e5e5e5; box-shadow: 0 4px 15px rgba(0,0,0,0.02); margin-top: 30px; margin-bottom: 40px; text-align: left;">
+            <div style="font-size: 13px; color: #555; font-weight: 600;">
+                ⚓ Module logistique connecté au serveur local XAMPP MySQL (SPAT Toamasina).
+            </div>
+                   <!-- Bouton Bleu Royal Interactif Semaine 3 -->
+        <a href="#" onclick="window.location.href='/distributions.html?role=' + encodeURIComponent(new URLSearchParams(window.location.search).get('role'))" style="background: linear-gradient(135deg, #003366, #0056b3); color: white; padding: 14px 28px; border-radius: 6px; font-weight: bold; text-decoration: none; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 12px rgba(0, 51, 102, 0.25); display: inline-block; margin-right: 10px;">
+            📋 Ouvrir Registre de Distribution ➡️
+        </a>
+
+        <!-- Bouton Vert Émeraude Interactif pour les Acteurs -->
+        <a href="#" id="btn-gerer-acteurs" onclick="window.location.href='/acteurs.html?role=' + encodeURIComponent(new URLSearchParams(window.location.search).get('role'))" style="background: linear-gradient(135deg, #1e7e34, #28a745); color: white; padding: 14px 28px; border-radius: 6px; font-weight: bold; text-decoration: none; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.25); display: inline-block;">
+            👥 Gérer les Acteurs ➡️
+        </a>
+
+</body>
+</html>

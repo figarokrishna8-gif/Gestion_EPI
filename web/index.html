@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPAT - Authentification</title>
+</head>
+<body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; display: flex; height: 100vh; background-color: #f4f6f9;">
+
+    <!-- PARTIE GAUCHE : Bloc dégradé Vert & Bleu (Identité visuelle du Port) -->
+    <div style="flex: 1; background: linear-gradient(135deg, #1e7e34, #004085); color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 40px; box-sizing: border-box;">
+                <!-- LOGO OFFICIEL SPAT -->
+                <!-- BLOC LOGO EN ARRIÈRE-PLAN SÉCURISÉ -->
+                <div style="margin-bottom: 25px; text-align: left;">
+            <div style="width: 120px; height: 120px; background: white url('/logo-spat.png') no-repeat center center; background-size: contain; padding: 5px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);"></div>
+        </div>
+
+
+        <div>
+            <span style="background: rgba(255,255,255,0.2); padding: 6px 15px; border-radius: 20px; font-size: 11px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">Port de Toamasina</span>
+            <h1 style="margin: 25px 0 10px 0; font-size: 48px; font-weight: 800; letter-spacing: 1.5px;">S.P.A.T</h1>
+            <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 500; opacity: 0.9; line-height: 1.4;">Gestion & Suivi des Équipements de Protection Individuelle</h2>
+            <p style="font-size: 14px; opacity: 0.75; line-height: 1.6; max-width: 450px;">
+                Bienvenue sur la plateforme interne dédiée à la sécurité du personnel portuaire. Connectez-vous pour gérer le référentiel des EPI, suivre l'état des stocks en temps réel et piloter les distributions nominatives.
+            </p>
+        </div>
+
+        <div style="font-size: 12px; opacity: 0.6; font-weight: 500;">
+            © 2026 SPAT Toamasina - Département Sécurité & Environnement.
+        </div>
+    </div>
+
+    <!-- PARTIE DROITE : Formulaire de Connexion Blanc Épuré -->
+    <div style="width: 45%; min-width: 400px; background: white; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; box-sizing: border-box; box-shadow: -5px 0 25px rgba(0,0,0,0.05);">
+        
+        <div style="width: 100%; max-width: 340px;">
+            <h2 style="margin: 0 0 8px 0; color: #003366; font-size: 28px; font-weight: 700;">Espace Connexion</h2>
+            <p style="margin: 0 0 35px 0; color: #666; font-size: 14px;">Veuillez renseigner vos accès professionnels pour continuer.</p>
+
+            <form action="/login" method="POST" style="display: flex; flex-direction: column; gap: 20px;">
+                
+                <!-- Numéro Matricule -->
+                <div>
+                    <label style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600; color: #333;">Numéro Matricule</label>
+                    <input type="text" name="matricule" required placeholder="Ex: 2026_014" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-sizing: border-box; outline: none; background: #fafafa; transition: 0.3s;">
+                </div>
+
+                <!-- Mot de passe avec bouton Œil intégré -->
+                <div>
+                    <label style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600; color: #333;">Mot de passe</label>
+                    <div style="position: relative; width: 100%;">
+                        <input type="password" id="passwordField" name="password" required placeholder="••••••••" style="width: 100%; padding: 12px 40px 12px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-sizing: border-box; outline: none; background: #fafafa; transition: 0.3s;">
+                        
+                        <!-- Petit œil d'affichage cliquable -->
+                        <button type="button" id="togglePassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 16px; opacity: 0.7; padding: 0; outline: none;">👁️</button>
+                    </div>
+                </div>
+
+                <!-- Bouton S'authentifier Bleu Officiel -->
+                <button type="submit" style="width: 100%; padding: 13px; margin-top: 10px; border: none; border-radius: 6px; background-color: #003366; color: white; font-size: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0, 51, 102, 0.2); transition: background 0.2s;">S'authentifier ↩</button>
+            </form>
+
+            <!-- Mot de passe oublié -->
+            <div style="margin-top: 25px; text-align: center; font-size: 13px;">
+                <a href="#" id="forgotPasswordLink" style="color: #0056b3; text-decoration: none; font-weight: 500;">Mot de passe oublié ?</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script JavaScript Interactif -->
+    <script>
+        // Effets focus sur les bordures d'entrée
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.style.border = '1px solid #003366';
+                input.style.background = '#fff';
+            });
+            input.addEventListener('blur', () => {
+                input.style.border = '1px solid #ccc';
+                input.style.background = '#fafafa';
+            });
+        });
+
+        // Afficher / Masquer le mot de passe (Œil interactif)
+        const passwordField = document.getElementById('passwordField');
+        const togglePassword = document.getElementById('togglePassword');
+
+        togglePassword.addEventListener('click', function () {
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                togglePassword.textContent = '🔒';
+            } else {
+                passwordField.type = 'password';
+                togglePassword.textContent = '👁️';
+            }
+        });
+
+        // Demande de réinitialisation mot de passe oublié
+        document.getElementById('forgotPasswordLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert("📧 Une alerte de réinitialisation de mot de passe a bien été envoyée à l'Administrateur principal HSTE.");
+        });
+    </script>
+</body>
+</html>

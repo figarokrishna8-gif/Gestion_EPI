@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPAT - Gestion des Distributions</title>
+    <style>
+        .action-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            margin: 0 3px;
+            border-radius: 6px;
+            transition: transform 0.18s ease, background-color 0.18s ease;
+        }
+
+        .action-link:hover,
+        .action-link:focus-visible {
+            transform: scale(1.14);
+            outline: none;
+        }
+
+        .action-link svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-width: 2;
+        }
+
+        .action-edit {
+            color: #0056b3;
+        }
+
+        .action-edit:hover,
+        .action-edit:focus-visible {
+            background-color: #e8f1fb;
+        }
+
+        .action-delete {
+            color: #dc3545;
+        }
+
+        .action-delete:hover,
+        .action-delete:focus-visible {
+            background-color: #fdebed;
+        }
+    </style>
+</head>
+<body style="font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url('/fond-port.png') no-repeat center center; background-size: cover; background-attachment: fixed; margin: 0; padding: 30px 20px;">
+
+    <!-- Conteneur principal transparent invisible -->
+    <div style="width: 95%; max-width: 1100px; margin: 20px auto; padding: 10px; box-sizing: border-box;">
+        
+        <!-- En-tête SPAT Toamasina -->
+        <div style="background-color: #003366; color: white; padding: 25px; border-radius: 6px; margin-bottom: 25px; text-align: center; width: 100%; box-sizing: border-box;">
+            <h1 style="margin: 0; font-size: 28px; letter-spacing: 1px;">SPAT Toamasina</h1>
+           <p style="margin: 5px 0 0 0; font-size: 15px; opacity: 0.9; font-weight: 500;">Module de Distribution et de Dotation du Personnel</p>
+
+        </div>
+
+              <!-- Menu de navigation pour basculer vers les commandes ou le dashboard -->
+        <div style="display: flex; gap: 15px; margin-bottom: 25px;">
+            <a href="/commandes.html" style="background-color: #003366; color: white; padding: 12px 24px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0, 51, 102, 0.2);">📦 Passer aux Commandes</a>
+            <a href="#" onclick="window.location.href='/dashboard.html?role=' + encodeURIComponent(new URLSearchParams(window.location.search).get('role'))" style="background-color: #6c757d; color: white; padding: 10px 15px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 12px; text-transform: uppercase; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: inline-block; margin-bottom: 15px;">
+    ⬅️ État des Stocks
+</a>
+
+        </div>
+
+
+                <!-- CONTENEUR DU PETIT 1 (Masquable de force en un clic par Java pour le HSTE) -->
+        <div id="section-attribution-epi" style="background: rgba(255, 255, 255, 0.95); padding: 25px; border-radius: 8px; border: 1px solid #e5e5e5; box-shadow: 0 4px 15px rgba(0,0,0,0.02); margin-bottom: 30px;">
+            <h3 style="margin-top: 0; font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #003366; margin-bottom: 20px; border-bottom: 2px solid #003366; padding-bottom: 10px;">1. Enregistrer l'Émargement d'une Distribution</h3>
+            <form action="/attribuer-epi" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+        </div>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <!-- Matricule -->
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Matricule de l'Agent</label>
+                        <input type="text" name="matricule_employe" required placeholder="Ex: MAT-2026-XYZ" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; height: 40px;">
+                    </div>
+                    <!-- Nom -->
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Nom</label>
+                        <input type="text" name="nom_employe" required placeholder="En majuscules" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; height: 40px;">
+                    </div>
+                    <!-- Prénom -->
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Prénom</label>
+                        <input type="text" name="prenom_employe" required placeholder="Ex: Jean" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; height: 40px;">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
+                    <!-- Service / Direction -->
+                    <div style="flex: 1.5; min-width: 200px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Service / Direction Portuaire</label>
+                        <select name="service_direction" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; height: 40px; background: white;">
+                            <option value="Département HSTE">Département HSTE</option>
+                            <option value="Opérations Portuaires (Dockers)">Opérations Portuaires (Dockers)</option>
+                            <option value="Maintenance & Technique">Maintenance & Technique</option>
+                            <option value="Capitainerie">Capitainerie</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Choix de l'EPI disponible -->
+                    <div style="flex: 1.5; min-width: 200px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Sélectionner l'EPI à distribuer</label>
+                        <select name="id_type" id="select-epi-distribution" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; height: 40px; background: white;">
+                            <!-- Rempli dynamiquement par Java -->
+                        </select>
+                    </div>
+
+                    <!-- Quantité -->
+                    <div style="flex: 0.5; min-width: 100px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Quantité</label>
+                        <input type="number" name="quantite_distribuee" required value="1" min="1" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; height: 40px; text-align: center;">
+                    </div>
+
+                    <button type="submit" style="padding: 10px 25px; background-color: #28a745; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; height: 40px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Valider l'Attribution ✔</button>
+                </div>
+            </form>
+        </section>
+
+       
+
+        <!-- TABLEAU : Affichage des attributions nominatives faites -->
+        <section style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 25px; border-radius: 8px; border: 1px solid #ddd;">
+            <h3 style="margin-top: 0; color: #003366; border-bottom: 2px solid #003366; padding-bottom: 8px; font-size: 20px;">2. Registre des Dotations Nominatives du Personnel</h3>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 15px; background: white;">
+                <thead>
+                    <tr style="background-color: #003366; color: white;">
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd; border-right: 1px solid #e5e5e5;">Matricule</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd; border-right: 1px solid #e5e5e5;">Agent</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd; border-right: 1px solid #e5e5e5;">Service / Direction</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd; border-right: 1px solid #e5e5e5;">Matériel attribué</th>
+                        <th style="padding: 12px; text-align: center; border: 1px solid #ddd; border-right: 1px solid #e5e5e5;">Quantité</th>
+                        <th style="padding: 12px; text-align: center; border: 1px solid #ddd; border-right: 1px solid #e5e5e5;">Date</th>
+                        <th style="padding: 12px; text-align: center; border: 1px solid #ddd; border-right: none;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="table-distributions-body">
+                      <!-- LIGNES_DISTRIBUTIONS -->
+
+                </tbody>
+            </table>
+        </section>
+
+       
+    </div>
+</body>
+
+</html>

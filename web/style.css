@@ -1,0 +1,74 @@
+/* ---- STYLE GENERAL DE L'APPLICATION SPAT ---- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ccac6b;;
+    margin: 0;
+    padding: 40px 20px;
+    color: #333;
+    line-height: 1.6;
+}
+
+.dashboard-container {
+    width: 95%;
+    max-width: 1100px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+}
+
+/* Style des Tableaux */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: #ffffff;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #dddddd;
+}
+
+table th {
+    background-color: #003366;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* ---- STYLES POUR LE MODE NUIT ---- */
+body.dark-theme {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+}
+
+body.dark-theme .dashboard-container {
+    background-color: #2d2d2d !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05) !important;
+}
+
+body.dark-theme section {
+    background-color: #3a3a3a !important;
+    color: #ffffff !important;
+}
+
+body.dark-theme table {
+    background-color: #2d2d2d !important;
+}
+
+body.dark-theme table td {
+    border: 1px solid #444444 !important;
+    color: #ffffff !important;
+}
+
+body.dark-theme table th {
+    background-color: #111111 !important;
+}
+
+body.dark-theme label, body.dark-theme span {
+    color: #dddddd !important;
+}

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>SPAT - Gestion des Acteurs</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: url('/background-epi.png') no-repeat center center fixed; background-size: cover; color: #333; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .container { width: 100%; max-width: 1200px; background: rgba(255, 255, 255, 0.96); padding: 40px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); backdrop-filter: blur(5px); box-sizing: border-box; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #003366; padding-bottom: 20px; margin-bottom: 30px; }
+        .title-app { margin: 0; font-size: 24px; font-weight: 800; color: #003366; text-transform: uppercase; }
+        .btn-retour { background: #6c757d; color: white; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px; text-transform: uppercase; }
+        .panels { display: flex; gap: 30px; flex-wrap: wrap; }
+        .panel { flex: 1; min-width: 450px; background: white; padding: 25px; border-radius: 8px; border: 1px solid #e5e5e5; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        h3 { color: #003366; text-transform: uppercase; font-size: 14px; font-weight: 800; border-bottom: 2px solid #eee; padding-bottom: 8px; margin-top: 0; }
+        form { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: flex-end; }
+        .form-group { display: flex; flex-direction: column; flex: 1; min-width: 120px; }
+        label { font-size: 10px; font-weight: 700; color: #555; text-transform: uppercase; margin-bottom: 5px; }
+        input, select { padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; height: 36px; }
+        button { background: #003366; color: white; border: none; padding: 0 15px; border-radius: 4px; font-weight: bold; cursor: pointer; height: 36px; text-transform: uppercase; font-size: 11px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background: #f1f5f9; color: #333; padding: 10px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 10px; font-size: 13px; border-bottom: 1px solid #edf2f7; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-top">
+            <h2 class="title-app">👥 Registre Général des Acteurs (SPAT Toamasina)</h2>
+            <a href="/dashboard.html?role=Administrateur+%2F+Gestionnaire+EPI" class="btn-retour">⬅️ État des Stocks</a>
+        </div>
+
+        <div class="panels">
+            <!-- PARTIE 1 : ENREGISTRER UN EMPLOYÉ BÉNÉFICIAIRE -->
+            <div class="panel">
+                <h3>📋 1. Personnel Bénéficiaire (Agents de Terrain)</h3>
+                <form action="/ajouter-personnel" method="POST">
+                    <div class="form-group">
+                        <label>Matricule</label>
+                        <input type="text" name="matricule" required placeholder="Ex: 1994011">
+                    </div>
+                    <div class="form-group">
+                        <label>Nom</label>
+                        <input type="text" name="nom" required placeholder="Ex: BOSELA">
+                    </div>
+                    <div class="form-group">
+                        <label>Prénom</label>
+                        <input type="text" name="prenom" required placeholder="Ex: Tsimijaly">
+                    </div>
+                    <div class="form-group">
+                        <label>Service</label>
+                        <select name="service" required>
+                            <option value="Capitainerie">Capitainerie</option>
+                            <option value="Département HSTE">Département HSTE</option>
+                            <option value="Maintenance">Maintenance</option>
+                        </select>
+                    </div>
+                    <button type="submit">Ajouter ↩</button>
+                </form>
+
+                <table>
+                    <thead>
+                        <tr><th>Matricule</th><th>Nom & Prénom</th><th>Service</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        <!-- LIGNES_PERSONNEL -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PARTIE 2 : ENREGISTRER UN FOURNISSEUR -->
+            <div class="panel">
+                <h3>🏢 2. Fournisseurs Externes (Entités Logistiques)</h3>
+                <form action="/ajouter-fournisseur" method="POST">
+                    <div class="form-group">
+                        <label>Nom Entreprise</label>
+                        <input type="text" name="nom_entreprise" required placeholder="Ex: SINO-HYDRO">
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Téléphone</label>
+                        <input type="text" name="contact" placeholder="Ex: 034 11 222 33">
+                    </div>
+                    <div class="form-group">
+                        <label>Adresse / Ville</label>
+                        <input type="text" name="adresse" placeholder="Ex: Toamasina Port">
+                    </div>
+                    <button type="submit">Enregistrer ↩</button>
+                </form>
+
+                <table>
+                    <thead>
+                        <tr><th>Entreprise</th><th>Contact</th><th>Adresse</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        <!-- LIGNES_FOURNISSEURS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('click', function (event) {
+            const suppression = event.target.closest('.supprimer-acteur');
+            if (!suppression) return;
+
+            event.preventDefault();
+            const ligne = suppression.closest('tr');
+            fetch(suppression.href, { method: 'GET' })
+                .then(function (response) {
+                    if (!response.ok) throw new Error('Suppression impossible');
+                    if (ligne) ligne.remove();
+                })
+                .catch(function () {
+                    alert('Erreur lors de la suppression en base de donnees.');
+                });
+        });
+    </script>
+
+</body>
+</html>

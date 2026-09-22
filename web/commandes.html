@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>SPAT - Gestion des Commandes Fournisseurs</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: url('/background-epi.png') no-repeat center center fixed; background-size: cover; color: #333; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .container { width: 100%; max-width: 1200px; background: rgba(255, 255, 255, 0.96); padding: 40px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); backdrop-filter: blur(5px); box-sizing: border-box; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #003366; padding-bottom: 20px; margin-bottom: 30px; }
+        .title-app { margin: 0; font-size: 24px; font-weight: 800; color: #003366; text-transform: uppercase; letter-spacing: 0.5px; }
+        .btn-retour { background: #6c757d; color: white; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px; text-transform: uppercase; transition: background 0.2s; }
+        .btn-retour:hover { background: #5a6268; }
+        h3 { color: #003366; text-transform: uppercase; font-size: 15px; font-weight: 800; margin-bottom: 20px; letter-spacing: 0.5px; }
+        .form-grid { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 40px; background: #f8f9fa; padding: 25px; border-radius: 6px; border: 1px solid #e5e5e5; align-items: flex-end; }
+        .form-group { flex: 1; min-width: 150px; display: flex; flex-direction: column; }
+        label { font-size: 11px; font-weight: 700; color: #555; text-transform: uppercase; margin-bottom: 8px; }
+        input, select { padding: 10px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; height: 40px; box-sizing: border-box; background: white; font-weight: 600; }
+        .btn-valider { background: #003366; color: white; border: none; padding: 0 25px; border-radius: 4px; font-weight: bold; cursor: pointer; height: 40px; text-transform: uppercase; font-size: 12px; transition: background 0.2s; }
+        .btn-valider:hover { background: #002244; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        th { background-color: #003366; color: white; text-align: left; padding: 14px 10px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-right: 1px solid rgba(255,255,255,0.15); }
+        td { padding: 12px 10px; font-size: 13.5px; border-right: 1px solid #e5e5e5; }
+        tr:hover { background-color: #fafdff; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        .badge-attente { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .badge-recu { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .btn-action { background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 11px; text-transform: uppercase; text-decoration: none; }
+        .btn-action:hover { background: #218838; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-top">
+            <h2 class="title-app">📦Gestion des Commandes & Approvisionnements</h2>
+            <a href="/dashboard.html?role=Administrateur+%2F+Gestionnaire+EPI" class="btn-retour">⬅️ État des Stocks</a>
+        </div>
+
+        <!-- FORMULAIRE DE COMMANDE -->
+        <h3>1. Émettre un nouveau Bon de Commande Fournisseur</h3>
+               <form action="/creer-commande" method="POST" class="form-grid">
+            <div class="form-group">
+                <label>N° Bon de Commande</label>
+                <input type="text" name="numero_bon" required placeholder="Ex: BC-2026-001">
+            </div>
+            <div class="form-group">
+                <label>Fournisseur</label>
+                <input type="text" name="nom_fournisseur" required placeholder="Ex: SINO-HYDRO, JCR...">
+            </div>
+            <div class="form-group" style="flex: 1.5;">
+                <label>Équipement à commander</label>
+                <select name="id_type" id="select-epi-commande" required>
+                    <!-- Rempli dynamiquement par Java -->
+                </select>
+            </div>
+            <div class="form-group" style="max-width: 90px;">
+                <label>Quantité</label>
+                <input type="number" name="quantite_commandee" value="10" min="1" required>
+            </div>
+            <div class="form-group" style="max-width: 130px;">
+                <label>Prix Unitaire HT (Ar)</label>
+                <input type="number" name="prix_unitaire_ht" required placeholder="Ex: 45000">
+            </div>
+            <button type="submit" class="btn-valider">Enregistrer la commande ↩</button>
+        </form>
+
+
+        <!-- TABLEAU DU SUIVI -->
+        <h3>2. Historique des Commandes et Suivi des Livraisons</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 120px;">N° Bon</th>
+                    <th>Fournisseur</th>
+                    <th>Matériel Commandé</th>
+                    <th style="width: 80px; text-align: center;">Quantité</th>
+                    <th>Montant Total TTC</th>
+                    <th style="width: 110px; text-align: center;">Statut</th>
+                    <th style="width: 140px; text-align: center; border-right: none;">Action Livraison</th>
+                </tr>
+            </thead>
+            <tbody id="table-commandes-body">
+                <!-- LIGNES_COMMANDES -->
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
